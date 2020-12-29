@@ -133,7 +133,7 @@ class UI:
 
 
 if __name__ == '__main__':
-    reset_list = ['Abhishek', 'Aditi', 'Chandana', 'Mahesh', 'Rahul', 'Rutvik', 'Sarang', 'Shantanu', 'Sreehari', 'Tejaravind', 'Yashdeep']
+    reset_list = [] #Here define your own list of people. This is the list which will be used in the code
     root = tk.Tk()
     UI(root, reset_list)
     root.mainloop()
