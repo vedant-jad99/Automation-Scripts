@@ -3,9 +3,42 @@
 import os
 import tkinter as tk
 from random import randint
+from bs4 import BeautifulSoup as bs
+import webbrowser
 
 UNSELECT = "unselected.txt"
 SELECT = "select.txt"
+
+HTML = '''<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>
+        Activity Report
+    </title>
+    <link rel="stylesheet" href="tabledesign.css">
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <div id="title">
+        <img src="images/score.jpeg" id="image">
+    </div>
+    <table id="activityReport">
+        <thead>
+            <tr>
+                <th id="name">Name</th>
+                <th id="score">Score</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+        </tbody>
+    </table>
+
+    <script type="module" src="scripts/activity.js"></script>
+</body>
+
+</html>'''
 
 class random_selector:
     def __init__(self, re_list):
@@ -69,6 +102,7 @@ class UI:
         self.text = tk.Label(self.frame, text="", relief=tk.GROOVE, borderwidth=5, height=13, width=10)
         self.shuffle = tk.Button(self.frame, text="SHUFFLE", width=6, relief=tk.RAISED, borderwidth=5, command=lambda: self.__on_shuffle__(selector))
         self.reset = tk.Button(self.frame, text="RESET", width=6, relief=tk.RAISED, borderwidth=5, command=lambda: self.__on_reset__(selector, re_list))
+        self.scoreboard = tk.Button(self.frame, text="SCORE", width=6, relief=tk.RAISED, borderwidth=5, command=lambda: self.showHTML(selector))
         self.name = tk.Label(self.frame2, text="", width=55, height=20, relief=tk.GROOVE, borderwidth=5)
         
         self.list = [tk.Label(self.frame3, text=i, width=10, relief=tk.GROOVE, borderwidth=5, bg="white") for i in re_list]
@@ -76,6 +110,7 @@ class UI:
 
         self.shuffle.grid(row=1, column=0, padx=2, pady=10)
         self.reset.grid(row=2, column=0, padx=2, pady=10)
+        self.scoreboard.grid(row=3, column=0, padx=2, pady=10)
         self.text.grid(row=0, column=0, padx=2)
         self.name.grid(row=0, column=0)
         
@@ -112,6 +147,8 @@ class UI:
              f.close()
         self.name.config(text="")
         self.__set_name_on_label__(re_list=re_list)
+        selector.score_dict = {}
+
 
     def __set_name_on_label__(self, re_list=None, names=None):
         if names == None:
@@ -130,10 +167,28 @@ class UI:
                 pass
             self.text.config(text=string)
 
+    def showHTML(self, selector):
+        html = bs(HTML, 'html.parser')
+        body = html.find('tbody')
+        for key, val in selector.score_dict.items():
+            row = html.new_tag('tr')
+            child1 = html.new_tag('td')
+            child2 = html.new_tag('td')
+            child1.string = key
+            child2.string = str(val)
+            row.append(child1)
+            row.append(child2)
+            body.append(row)
+        
+        with open('score.html', 'w') as f:
+            f.write(str(html))
+            f.close()
+        webbrowser.open('score.html')
+        
 
 
 if __name__ == '__main__':
-    reset_list = [] #Here define your own list of people. This is the list which will be used in the code
+    reset_list = ['Abhishek', 'Aditi', 'Chandana', 'Mahesh', 'Rahul', 'Rutvik', 'Sarang', 'Shantanu', 'Sreehari', 'Tejaravind', 'Yashdeep']
     root = tk.Tk()
     UI(root, reset_list)
     root.mainloop()
