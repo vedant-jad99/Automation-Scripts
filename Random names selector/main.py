@@ -101,16 +101,18 @@ class UI:
         
         self.text = tk.Label(self.frame, text="", relief=tk.GROOVE, borderwidth=5, height=13, width=10)
         self.shuffle = tk.Button(self.frame, text="SHUFFLE", width=6, relief=tk.RAISED, borderwidth=5, command=lambda: self.__on_shuffle__(selector))
-        self.reset = tk.Button(self.frame, text="RESET", width=6, relief=tk.RAISED, borderwidth=5, command=lambda: self.__on_reset__(selector, re_list))
+        self.reset = tk.Button(self.frame, text="AGAIN", width=6, relief=tk.RAISED, borderwidth=5, command=lambda: self.__on_reset__(selector, re_list, True))
         self.scoreboard = tk.Button(self.frame, text="SCORE", width=6, relief=tk.RAISED, borderwidth=5, command=lambda: self.showHTML(selector))
+        self.zero_score = tk.Button(self.frame, text="RESET", width=6, relief=tk.RAISED, borderwidth=5, command=lambda: self.__on_reset__(selector, re_list))
         self.name = tk.Label(self.frame2, text="", width=55, height=20, relief=tk.GROOVE, borderwidth=5)
         
         self.list = [tk.Label(self.frame3, text=i, width=10, relief=tk.GROOVE, borderwidth=5, bg="white") for i in re_list]
         self.__set_name_on_label__(re_list)
 
-        self.shuffle.grid(row=1, column=0, padx=2, pady=10)
-        self.reset.grid(row=2, column=0, padx=2, pady=10)
-        self.scoreboard.grid(row=3, column=0, padx=2, pady=10)
+        self.shuffle.grid(row=1, column=0, padx=2, pady=5)
+        self.reset.grid(row=2, column=0, padx=2, pady=5)
+        self.scoreboard.grid(row=3, column=0, padx=2, pady=5)
+        self.zero_score.grid(row=4, column=0, padx=2, pady=5)
         self.text.grid(row=0, column=0, padx=2)
         self.name.grid(row=0, column=0)
         
@@ -137,7 +139,7 @@ class UI:
         self.name.config(text=name, font=44)
         self.__set_name_on_label__(names=names)
     
-    def __on_reset__(self, selector, re_list):
+    def __on_reset__(self, selector, re_list, again=False):
         with open(UNSELECT, 'w+') as f:
             for i in re_list[:-1]:
                 f.write(i + "\n")
@@ -147,7 +149,8 @@ class UI:
              f.close()
         self.name.config(text="")
         self.__set_name_on_label__(re_list=re_list)
-        selector.score_dict = {}
+        if not again:
+            selector.score_dict = {}
 
 
     def __set_name_on_label__(self, re_list=None, names=None):
