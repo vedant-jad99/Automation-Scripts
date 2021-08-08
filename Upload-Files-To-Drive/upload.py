@@ -14,7 +14,7 @@ FOLDER = "application/vnd.google-apps.folder"
 PATH = "/".join(os.path.abspath(__file__).split('/')[:-1])
 CREDS = os.path.join(PATH, "mycreds.txt")
 LOG = os.path.join(PATH, "uploads.log")
-TARGET = "/home/thedarkcoder/Desktop/Self-Dev"
+TARGET = "path/to/target/folder"
 
 logging.basicConfig(level=logging.INFO, filename=LOG, format="%(asctime)s :: %(levelname)s :: %(message)s")
 g_auth = GoogleAuth()
